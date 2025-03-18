@@ -123,7 +123,69 @@
             // Create more stars for a denser universe
             const stars = Array.from({ length: 300 }, () => new Star());
             
-            // Enhanced animation loop with nebula effect
+            // Nebula class for creating cosmic cloud effects
+            class Nebula {
+                constructor() {
+                    this.particles = [];
+                    this.numParticles = 50;
+                    this.colors = [
+                        'rgba(255, 0, 128, 0.02)',  // Softer Pink
+                        'rgba(128, 0, 255, 0.02)',  // Softer Purple
+                        'rgba(0, 128, 255, 0.02)',  // Softer Blue
+                        'rgba(255, 128, 0, 0.02)'   // Softer Orange
+                    ];
+                    this.init();
+                }
+            
+                init() {
+                    for (let i = 0; i < this.numParticles; i++) {
+                        this.particles.push({
+                            x: Math.random() * canvas.width,
+                            y: Math.random() * canvas.height,
+                            size: Math.random() * 200 + 100,
+                            color: this.colors[Math.floor(Math.random() * this.colors.length)],
+                            vx: (Math.random() - 0.5) * 0.2,
+                            vy: (Math.random() - 0.5) * 0.2,
+                            alpha: Math.random() * 0.3
+                        });
+                    }
+                }
+
+                update() {
+                    this.particles.forEach(particle => {
+                        particle.x += particle.vx;
+                        particle.y += particle.vy;
+                        particle.alpha += (Math.random() - 0.5) * 0.01;
+                        particle.alpha = Math.max(0.1, Math.min(0.5, particle.alpha));
+
+                        if (particle.x < -particle.size) particle.x = canvas.width + particle.size;
+                        if (particle.x > canvas.width + particle.size) particle.x = -particle.size;
+                        if (particle.y < -particle.size) particle.y = canvas.height + particle.size;
+                        if (particle.y > canvas.height + particle.size) particle.y = -particle.size;
+                    });
+                }
+
+                draw() {
+                    this.particles.forEach(particle => {
+                        const gradient = ctx.createRadialGradient(
+                            particle.x, particle.y, 0,
+                            particle.x, particle.y, particle.size
+                        );
+                        const color = particle.color.replace('0.05', particle.alpha);
+                        gradient.addColorStop(0, color);
+                        gradient.addColorStop(1, 'rgba(0, 0, 0, 0)');
+                        
+                        ctx.fillStyle = gradient;
+                        ctx.beginPath();
+                        ctx.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2);
+                        ctx.fill();
+                    });
+                }
+            }
+
+            const nebula = new Nebula();
+            
+            // Enhanced animation loop with nebula and aurora effects
             function animate() {
                 ctx.fillStyle = 'rgba(0, 0, 0, 0.1)';
                 ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -139,6 +201,11 @@
                 ctx.fillStyle = gradient;
                 ctx.fillRect(0, 0, canvas.width, canvas.height);
                 
+                // Update and draw nebula
+                nebula.update();
+                nebula.draw();
+                
+                // Update and draw stars
                 stars.forEach(star => {
                     star.update();
                     star.draw();
@@ -254,14 +321,36 @@
                 </ul>
             </div>
 
-            <!-- Newsletter -->
+            <!-- Social Media Section -->
             <div class="space-y-4">
-                <h3 class="text-xl font-bold text-cyan-400">Boletín Informativo</h3>
-                <p class="text-gray-300 text-sm">Suscríbete para recibir las últimas noticias y actualizaciones.</p>
-                <form class="space-y-2">
-                    <input type="email" placeholder="Tu correo electrónico" class="w-full px-4 py-2 bg-gray-800 border border-gray-700 rounded-md focus:outline-none focus:border-cyan-400 text-gray-300">
-                    <button type="submit" class="w-full px-4 py-2 bg-cyan-500 text-black font-semibold rounded-md hover:bg-cyan-400 transition-colors">Suscribirse</button>
-                </form>
+                <h3 class="text-xl font-bold text-cyan-400">Síguenos en Redes Sociales</h3>
+                <p class="text-gray-300 text-sm">Mantente conectado con nosotros y descubre las últimas novedades del mundo aeroespacial.</p>
+                <div class="grid grid-cols-2 gap-4">
+                    <a href="#" class="flex items-center space-x-3 text-gray-300 hover:text-cyan-400 transition-all duration-300 transform hover:scale-105">
+                        <i class="fab fa-facebook-f text-2xl"></i>
+                        <span>Facebook</span>
+                    </a>
+                    <a href="#" class="flex items-center space-x-3 text-gray-300 hover:text-cyan-400 transition-all duration-300 transform hover:scale-105">
+                        <i class="fab fa-twitter text-2xl"></i>
+                        <span>Twitter</span>
+                    </a>
+                    <a href="#" class="flex items-center space-x-3 text-gray-300 hover:text-cyan-400 transition-all duration-300 transform hover:scale-105">
+                        <i class="fab fa-linkedin-in text-2xl"></i>
+                        <span>LinkedIn</span>
+                    </a>
+                    <a href="#" class="flex items-center space-x-3 text-gray-300 hover:text-cyan-400 transition-all duration-300 transform hover:scale-105">
+                        <i class="fab fa-instagram text-2xl"></i>
+                        <span>Instagram</span>
+                    </a>
+                    <a href="#" class="flex items-center space-x-3 text-gray-300 hover:text-cyan-400 transition-all duration-300 transform hover:scale-105">
+                        <i class="fab fa-youtube text-2xl"></i>
+                        <span>YouTube</span>
+                    </a>
+                    <a href="#" class="flex items-center space-x-3 text-gray-300 hover:text-cyan-400 transition-all duration-300 transform hover:scale-105">
+                        <i class="fab fa-tiktok text-2xl"></i>
+                        <span>TikTok</span>
+                    </a>
+                </div>
             </div>
         </div>
 
